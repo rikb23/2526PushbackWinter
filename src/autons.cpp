@@ -399,17 +399,16 @@ void sev_twoGoal_blue() {
   // go backward to approx 48 , 24 i think
   chassis.pid_odom_set({{48_in, 24_in}, rev, DRIVE_SPEED});
   chassis.pid_wait();
-  // pick up blocks - go reg speed till u get close, then slow down
   chassis.pid_turn_set({24_in, 48_in}, fwd,  TURN_SPEED);
   chassis.pid_wait();
-  chassis.pid_odom_set({{30_in, 30_in}, fwd, DRIVE_SPEED});
+  chassis.pid_odom_set({{30_in, 54_in}, fwd, DRIVE_SPEED});
   chassis.pid_wait();
-  chassis.pid_odom_set({{20_in, 20_in}, fwd, DRIVE_SPEED/2});
+  chassis.pid_odom_set({{20_in, 64_in}, fwd, DRIVE_SPEED/2});
   chassis.pid_wait();
   // wait till blocks are in basket
   pros::delay(2000);
   // score 1 or 2 in middle goal
-  chassis.pid_odom_set({{18_in, 18_in}, fwd, DRIVE_SPEED/2});
+  chassis.pid_odom_set({{18_in, 66_in}, fwd, DRIVE_SPEED/2});
   chassis.pid_wait();
   intake.move(-1 * 80);
   topintake.move(80);
@@ -419,7 +418,7 @@ void sev_twoGoal_blue() {
   topintake.move(127);
   backintake.move(-127);
   // align to long goal
-  chassis.pid_odom_set({{{48_in, 48_in, 0_deg}, rev, DRIVE_SPEED},
+  chassis.pid_odom_set({{{48_in, 24_in, 0_deg}, rev, DRIVE_SPEED},
                       {{48_in, 40_in}, fwd, DRIVE_SPEED},},
                       true);
   // score rest of blocks 
