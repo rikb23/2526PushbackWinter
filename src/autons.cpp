@@ -391,10 +391,11 @@ void sev_twoGoal_blue() {
   intake.move(-1*110);
   topintake.move(0);
   backintake.move(-1 * 110);
-  pros::delay(500);
+  chassis.pid_wait();
   // go forward
   chassis.pid_odom_set({{48_in, 8_in}, fwd, DRIVE_SPEED});
   chassis.pid_wait();
+  pros::delay(2000);
   // go backward to approx 48 , 24 i think
   chassis.pid_odom_set({{48_in, 24_in}, rev, DRIVE_SPEED});
   chassis.pid_wait();
@@ -426,6 +427,64 @@ void sev_twoGoal_blue() {
   topintake.move(-127);
   backintake.move(127);
   // if time left set up to clear matchload or push teamate off the thing
+
+}
+
+void solo_awp_blue() {
+    // intitial position (x,y,90 deg) // x parallel to field wall, y perpendicular
+  chassis.odom_xyt_set(17_in, 22_in, 90_deg);
+  // go to matchload
+  chassis.pid_odom_set({{48_in, 22_in}, fwd, DRIVE_SPEED});
+  chassis.pid_wait();
+  // turn facing 180 deg
+  chassis.pid_turn_set(180_deg, TURN_SPEED);
+  chassis.pid_wait();
+  // drop matchload + turn on intake
+  matchload.set(true);
+  intake.move(-1*110);
+  topintake.move(0);
+  backintake.move(-1 * 110);
+  chassis.pid_wait();
+  // go forward
+  chassis.pid_odom_set({{48_in, 8_in}, fwd, DRIVE_SPEED});
+  chassis.pid_wait();
+  pros::delay(2000);
+  // go backward to approx 48 , 24 i think
+  chassis.pid_odom_set({{48_in, 24_in}, rev, DRIVE_SPEED});
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(0_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  chassis.pid_odom_set({{48_in, 40_in}, fwd, DRIVE_SPEED});
+  chassis.pid_wait();
+
+  intake.move(127);
+  topintake.move(127);
+  backintake.move(-127);
+  pros::delay(2000);
+
+  chassis.pid_odom_set({{48_in, 24_in}, rev, DRIVE_SPEED});
+  chassis.pid_wait();
+
+  chassis.pid_turn_set({24_in, 48_in}, fwd,  TURN_SPEED);
+  chassis.pid_wait();
+  chassis.pid_odom_set({{30_in, 54_in}, fwd, DRIVE_SPEED});
+  chassis.pid_wait();
+  chassis.pid_odom_set({{20_in, 64_in}, fwd, DRIVE_SPEED/2});
+  chassis.pid_wait();
+  // wait till blocks are in basket
+  pros::delay(2000);
+  // score 1 or 2 in middle goal
+  chassis.pid_odom_set({{18_in, 66_in}, fwd, DRIVE_SPEED/2});
+  chassis.pid_wait();
+  intake.move(-1 * 80);
+  topintake.move(80);
+  backintake.move(80);
+  pros::delay(500);
+  intake.move(127);
+  topintake.move(127);
+  backintake.move(-127);
 
 }
 
@@ -520,6 +579,8 @@ void skills() {
   chassis.pid_odom_set({{-48_in, 137_in}, rev, DRIVE_SPEED});
   chassis.pid_wait();
   pros::delay(2000);
+
+
 
 
 
