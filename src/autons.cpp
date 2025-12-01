@@ -387,7 +387,7 @@ void sev_twoGoal_blue() {
   chassis.pid_turn_set(180_deg, TURN_SPEED);
   chassis.pid_wait();
   // drop matchload + turn on intake
-  matchload.set(true);
+  //matchload.set(true);
   intake.move(-1*110);
   topintake.move(0);
   backintake.move(-1 * 110);

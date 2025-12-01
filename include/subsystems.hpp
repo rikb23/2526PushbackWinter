@@ -7,9 +7,9 @@ extern Drive chassis;
 
 // Your motors, sensors, etc. should go here.  Below are examples
 
-pros::Motor intake(19,pros::MotorGearset::blue);
-pros::Motor topintake(20,pros::MotorGearset::green);
-pros::Motor backintake(18,pros::MotorGearset::green);
+inline pros::Motor intake(19);
+inline pros::Motor topintake(20);
+inline pros::Motor backintake(18);
 
 inline ez::Piston matchload('H');
 

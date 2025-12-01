@@ -58,7 +58,7 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      {"Drive\n\nDrive forward and come back", drive_example},
+      {"Drive\n\nDrive forward and come back", sev_twoGoal_blue},
       {"Turn\n\nTurn 3 times.", turn_example},
       {"Drive and Turn\n\nDrive forward, turn, come back", drive_and_turn},
       {"Drive and Turn\n\nSlow down during drive", wait_until_change_speed},
@@ -250,8 +250,8 @@ void opcontrol() {
     // Gives you some extras to make EZ-Template ezier
     ez_template_extras();
 
-    chassis.opcontrol_tank();  // Tank control
-    // chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
+    //chassis.opcontrol_tank();  // Tank control
+    chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
     // chassis.opcontrol_arcade_standard(ez::SINGLE);  // Standard single arcade
     // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
     // chassis.opcontrol_arcade_flipped(ez::SINGLE);   // Flipped single arcade
@@ -260,7 +260,7 @@ void opcontrol() {
     // Put more user control code here!
     // . . .
 
-    if (master.get_digital_new_press(DIGITAL_R1)) {
+    if (master.get_digital_new_press(DIGITAL_Y)) {
       matchload.set(!matchload.get());
     } 
 
@@ -289,6 +289,10 @@ void opcontrol() {
             topintake.move(0);
             backintake.move(0);
 
+        }
+
+     if (master.get_digital(DIGITAL_A)) {
+            sev_twoGoal_blue();
         }
 
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
