@@ -6,7 +6,7 @@
 /////
 
 // These are out of 127
-const int DRIVE_SPEED = 110;
+const int DRIVE_SPEED = 70;
 const int TURN_SPEED = 90;
 const int SWING_SPEED = 110;
 
@@ -15,7 +15,7 @@ const int SWING_SPEED = 110;
 ///
 void default_constants() {
   // P, I, D, and Start I
-  chassis.pid_drive_constants_set(20.0, 0.0, 100.0);         // Fwd/rev constants, used for odom and non odom motions
+  chassis.pid_drive_constants_set(20.0, 0.0, 100);         // Fwd/rev constants, used for odom and non odom motions
   chassis.pid_heading_constants_set(11.0, 0.0, 20.0);        // Holds the robot straight while going forward without odom
   chassis.pid_turn_constants_set(3.0, 0.05, 20.0, 15.0);     // Turn in place constants
   chassis.pid_swing_constants_set(6.0, 0.0, 65.0);           // Swing constants
@@ -88,6 +88,7 @@ void turn_example() {
 // Combining Turn + Drive
 ///
 void drive_and_turn() {
+  
   chassis.pid_drive_set(24_in, DRIVE_SPEED, true);
   chassis.pid_wait();
 
@@ -379,48 +380,71 @@ void measure_offsets() {
 
 void sev_twoGoal_blue() {
   // intitial position (x,y,90 deg) // x parallel to field wall, y perpendicular
-  chassis.odom_xyt_set(17_in, 22_in, 90_deg);
+  chassis.odom_xyt_set(15.5_in, 22_in, 90_deg);
   // go to matchload
-  chassis.pid_odom_set({{48_in, 22_in}, fwd, DRIVE_SPEED});
+  chassis.pid_odom_set({{46_in, 22_in}, fwd, DRIVE_SPEED});
   chassis.pid_wait();
   // turn facing 180 deg
   chassis.pid_turn_set(180_deg, TURN_SPEED);
   chassis.pid_wait();
-  // drop matchload + turn on intake
+
   //matchload.set(true);
+  chassis.pid_wait();
+  pros::delay(500);
+
+
+
+  // drop matchload + turn on intake
   intake.move(-1*110);
   topintake.move(0);
   backintake.move(-1 * 110);
   chassis.pid_wait();
+
+  chassis.pid_drive_set(5_in, 110, true);
+  chassis.pid_wait();
+
   // go forward
-  chassis.pid_odom_set({{48_in, 8_in}, fwd, DRIVE_SPEED});
-  chassis.pid_wait();
-  pros::delay(2000);
+  pros::delay(1000);
   // go backward to approx 48 , 24 i think
-  chassis.pid_odom_set({{48_in, 24_in}, rev, DRIVE_SPEED});
+  chassis.pid_odom_set({{43_in, 24_in}, rev, DRIVE_SPEED});
   chassis.pid_wait();
-  chassis.pid_turn_set({24_in, 48_in}, fwd,  TURN_SPEED);
+  //matchload.set(false);
+
   chassis.pid_wait();
-  chassis.pid_odom_set({{30_in, 54_in}, fwd, DRIVE_SPEED});
+  chassis.pid_turn_set({12_in, 43_in}, fwd,  TURN_SPEED);
   chassis.pid_wait();
-  chassis.pid_odom_set({{20_in, 64_in}, fwd, DRIVE_SPEED/2});
+  chassis.pid_odom_set({{20_in, 52_in}, fwd, DRIVE_SPEED/2});
   chassis.pid_wait();
   // wait till blocks are in basket
-  pros::delay(2000);
+  pros::delay(1500);
   // score 1 or 2 in middle goal
-  chassis.pid_odom_set({{18_in, 66_in}, fwd, DRIVE_SPEED/2});
+  chassis.pid_odom_set({{11.3_in, 59.3_in}, fwd, DRIVE_SPEED/2});
   chassis.pid_wait();
-  intake.move(-1 * 80);
-  topintake.move(80);
-  backintake.move(80);
-  pros::delay(500);
-  intake.move(127);
-  topintake.move(127);
-  backintake.move(-127);
+  intake.move(-1 * 100);
+  topintake.move(100);
+  backintake.move(100);
+  pros::delay(1500);
+  intake.move(0);
+  topintake.move(0);
+  backintake.move(0);
+  pros::delay(10);
+  intake.move(-1 * 100);
+  topintake.move(100);
+  backintake.move(100);
+  pros::delay(240);
+intake.move(0);
+  topintake.move(0);
+  backintake.move(0);
+  pros::delay(10);
+  intake.move(-1 * 100);
+  topintake.move(100);
+  backintake.move(100);
+  pros::delay(240);
   // align to long goal
-  chassis.pid_odom_set({{{48_in, 24_in, 0_deg}, rev, DRIVE_SPEED},
-                      {{48_in, 40_in}, fwd, DRIVE_SPEED},},
-                      true);
+  chassis.pid_odom_set({{46_in, 24_in}, rev, DRIVE_SPEED/2});
+  chassis.pid_wait();
+  chassis.pid_odom_set({{46_in, 40_in}, fwd, DRIVE_SPEED/2});
+  chassis.pid_wait();
   // score rest of blocks 
   intake.move(-127);
   topintake.move(-127);
@@ -586,5 +610,9 @@ void skills() {
 
 
 
+
+}
+
+void pid() {
 
 }
