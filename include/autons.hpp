@@ -18,3 +18,4 @@ void odom_boomerang_injected_pure_pursuit_example();
 void measure_offsets();
 
 void sev_twoGoal_blue();
+void skills();
