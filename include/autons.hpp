@@ -18,4 +18,13 @@ void odom_boomerang_injected_pure_pursuit_example();
 void measure_offsets();
 
 void sev_twoGoal_blue();
+void sev_twoGoal_red();
 void skills();
+void park();
+void sevenBall();
+void sevenBallHigh();
+void sevenBallLow();
+
+void sawp();
+void sixThree();
+void hi();

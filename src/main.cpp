@@ -8,10 +8,10 @@
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {13, -14, -16},     // Left Chassis Ports (negative port will reverse it!)
-    {11, -12, 15},  // Right Chassis Ports (negative port will reverse it!)
+    {11, -12, -13},     // Left Chassis Ports (negative port will reverse it!)
+    {-14, 15, 16},  // Right Chassis Ports (negative port will reverse it!)
 
-    10,      // IMU Port
+    9,      // IMU Port
     2.75,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
     450);   // Wheel RPM = cartridge * (motor gear / wheel gear)
 
@@ -51,14 +51,25 @@ void initialize() {
 
   // Set the drive to your own constants from autons.cpp!
   default_constants();
-
+ 
   // These are already defaulted to these buttons, but you can change the left/right curve buttons here!
   // chassis.opcontrol_curve_buttons_left_set(pros::E_CONTROLLER_DIGITAL_LEFT, pros::E_CONTROLLER_DIGITAL_RIGHT);  // If using tank, only the left side is used.
   // chassis.opcontrol_curve_buttons_right_set(pros::E_CONTROLLER_DIGITAL_Y, pros::E_CONTROLLER_DIGITAL_A);
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      //{"Drive\n\nDrive forward and come back", sev_twoGoal_blue},
+       {"skillss sigma", sixThree},
+         {"Measure Offsets\n\nThis will turn the robot a bunch of times and calculate your offsets for your tracking wheels.", hi},
+     {"red", park},
+     
+    {"skills", skills},
+    
+    // mtchload more right and scoring for righhtside
+    // scoring more left for left side, matchload more forward
+   
+     
+      
+     
       //{"Turn\n\nTurn 3 times.", turn_example},
       {"Drive and Turn\n\nDrive forward, turn, come back", drive_and_turn},
       {"Drive and Turn\n\nSlow down during drive", wait_until_change_speed},
@@ -71,7 +82,7 @@ void initialize() {
       {"Pure Pursuit Wait Until\n\nGo to (24, 24) but start running an intake once the robot passes (12, 24)", odom_pure_pursuit_wait_until_example},
       {"Boomerang\n\nGo to (0, 24, 45) then come back to (0, 0, 0)", odom_boomerang_example},
       {"Boomerang Pure Pursuit\n\nGo to (0, 24, 45) on the way to (24, 24) then come back to (0, 0, 0)", odom_boomerang_injected_pure_pursuit_example},
-      {"Measure Offsets\n\nThis will turn the robot a bunch of times and calculate your offsets for your tracking wheels.", measure_offsets},
+ 
   });
 
   // Initialize chassis and auton selector
@@ -242,9 +253,116 @@ void ez_template_extras() {
 
 int speed = 100;
 
+void score() {
+
+   chassis.odom_xyt_set(0_in, 0_in, 180_deg);
+   descore.set(true);
+     chassis.pid_drive_set(15_in, 120, true);
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(120_deg,90);
+ chassis.pid_wait();
+
+      chassis.pid_drive_set(-15_in, 120, true);
+  chassis.pid_wait();
+
+    chassis.pid_turn_set(180_deg,90);
+ chassis.pid_wait();
+
+    descore.set(false);
+     chassis.pid_wait();
+
+  chassis.pid_drive_set(-25_in, 120, true);
+  chassis.pid_wait();
+
+  descore.set(true);
+     chassis.pid_wait();
+
+
+ 
+}
+
+void scoreX() {
+
+    chassis.odom_xyt_set(0_in, 0_in, 180_deg);
+   descore.set(true);
+
+     chassis.pid_drive_set(15_in, 120, true);
+  chassis.pid_wait();
+
+        chassis.pid_odom_set({{-10_in, 0_in,0_deg}, fwd, 110});
+  chassis.pid_wait();
+
+  descore.set(false);
+
+        chassis.pid_drive_set(20_in, 120, true);
+  chassis.pid_wait();
+
+   descore.set(true);
+
+
+ 
+}
+
+void effScore() {
+   chassis.odom_xyt_set(0_in, 0_in, 180_deg);
+   descore.set(true);
+
+     chassis.pid_drive_set(15_in, 120, true);
+  chassis.pid_wait();
+
+        chassis.pid_odom_set({{10_in, 0_in,0_deg}, fwd, 110});
+  chassis.pid_wait();
+
+  descore.set(false);
+
+        chassis.pid_drive_set(15_in, 120, true);
+  chassis.pid_wait();
+
+   descore.set(true);
+}
+
+void deScore() {
+
+  chassis.pid_turn_set(0_deg,90);
+ chassis.pid_wait();
+
+    descore.set(true);
+     chassis.pid_wait();
+
+
+  chassis.pid_drive_set(22_in, 120, true);
+  chassis.pid_wait();
+
+  descore.set(false);
+     chassis.pid_wait();
+
+       chassis.pid_drive_set(15_in, 120, true);
+  chassis.pid_wait();
+}
+
+void backScore() {
+
+   chassis.pid_turn_set(0_deg,90);
+ chassis.pid_wait();
+  
+  descore.set(true);
+     chassis.pid_wait();
+
+     chassis.pid_drive_set(25_in, 120, true);
+  chassis.pid_wait();
+
+  descore.set(false);
+     chassis.pid_wait();
+
+          chassis.pid_drive_set(-15_in, 120, true);
+  chassis.pid_wait();
+}
 void opcontrol() {
   // This is preference to what you like to drive on
   chassis.drive_brake_set(MOTOR_BRAKE_COAST);
+
+  chassis.odom_xyt_set(0_in, 0_in, 180_deg);
 
   while (true) {
     // Gives you some extras to make EZ-Template ezier
@@ -264,25 +382,51 @@ void opcontrol() {
       matchload.set(!matchload.get());
     } 
 
+      if (master.get_digital_new_press(DIGITAL_DOWN)) {
+      descore.set(!descore.get());
+    } 
+
+        if (master.get_digital(DIGITAL_UP)) {
+           effScore();
+        }
+
+          if (master.get_digital(DIGITAL_LEFT)) {
+           deScore();
+        }
+
+            if (master.get_digital(DIGITAL_RIGHT)) {
+           backScore();
+        }
+
+           if (master.get_digital(DIGITAL_X)) {
+           scoreX();
+        }
+
+
+
      if (master.get_digital(DIGITAL_R1)) {
             intake.move(-127);
-            topintake.move(-127);
-            backintake.move(127);
+            topintake.move(127);
+              med.set(true);
+             small.set(false);
         }
         else if (master.get_digital(DIGITAL_R2)) {
-            intake.move(-1*speed);
-            topintake.move(0);
-            backintake.move(-1 * speed);
+            intake.move(-127);
+            topintake.move(127);
+             small.set(false);
+             med.set(false);
+            
+          
         }
        else if ((master.get_digital(DIGITAL_L1))) {
-            intake.move(-1 * speed);
-            topintake.move(speed);
-            backintake.move(speed);
+         intake.move(-127);
+            topintake.move(127);
+              med.set(false);
+             small.set(true);
         }
          else if ((master.get_digital(DIGITAL_L2))) {
-            intake.move(127);
-            topintake.move(127);
-            backintake.move(-127);
+        intake.move(127);
+            topintake.move(-127);
         }
         else {
             intake.move(0);
@@ -290,11 +434,17 @@ void opcontrol() {
             backintake.move(0);
 
         }
-
-     if (master.get_digital(DIGITAL_A)) {
+/*  if (master.get_digital(DIGITAL_A)) {
             skills();
-        }
+        }*/
+   
+
+    
 
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
 }
+
+
+
+
