@@ -17,5 +17,7 @@ inline ez::Piston descore('B');
 inline ez::Piston med('D');
 inline ez::Piston small('C');
 
+pros::Distance rightDS(10);
+
 // inline pros::Motor intake(1);
 // inline pros::adi::DigitalIn limit_switch('A');

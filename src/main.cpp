@@ -58,7 +58,7 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-       {"skillss sigma", sixThree},
+       {"skillss sigma", fullSkills},
          {"Measure Offsets\n\nThis will turn the robot a bunch of times and calculate your offsets for your tracking wheels.", hi},
      {"red", park},
      

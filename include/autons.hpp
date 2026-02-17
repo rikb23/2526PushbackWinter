@@ -31,3 +31,5 @@ void hi();
 
 
 void nineBlock();
+void fullSkills();
+

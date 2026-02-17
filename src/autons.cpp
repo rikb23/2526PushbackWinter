@@ -574,34 +574,24 @@ void skillsOldOld() {
   chassis.pid_odom_set({{46_in, 22_in}, fwd, 90});
   chassis.pid_wait();
   // turn facing 180 deg
-  chassis.pid_turn_set(180_deg, TURN_SPEED);
-  chassis.pid_wait();
+  chassis.pid_turn_set(180_deg, TURN_SPEED); chassis.pid_wait();
 
-  matchload.set(true);
-  chassis.pid_wait();
-  pros::delay(500);
-
+  matchload.set(true);  chassis.pid_wait(); pros::delay(500);
 
 
   // drop matchload + turn on intake
-  intake.move(-1*110);
-  topintake.move(0);
-  backintake.move(-1 * 110);
+  intake.move(-1*110); topintake.move(0); backintake.move(-1 * 110); chassis.pid_wait();
+
+  chassis.pid_drive_set(7_in, 120, true); chassis.pid_wait();
+
+  chassis.pid_drive_set(3_in, 70, true);  chassis.pid_wait(); pros::delay(100);
+for (int i = 0; i < 4; i++) {
+  chassis.pid_drive_set(-1_in, 70, true); 
   chassis.pid_wait();
-
-  chassis.pid_drive_set(7_in, 120, true);
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(3_in, 70, true);
-  chassis.pid_wait();
-
-  pros::delay(100);
-
-  chassis.pid_drive_set(-1_in, 70, true);
-  chassis.pid_wait();
-
+  
   chassis.pid_drive_set(1_in, 70, true);
   chassis.pid_wait();
+}
 
   chassis.pid_drive_set(-1_in, 70, true);
   chassis.pid_wait();
@@ -631,7 +621,7 @@ void skillsOldOld() {
 
   // go forward
  
-  // go backward to approx 48 , 24 i think
+  // go backward 
   chassis.pid_odom_set({{46_in, 24_in}, rev, skillsSpeed});
   chassis.pid_wait();
   matchload.set(false);
@@ -1683,5 +1673,155 @@ void hi() {
 
 
 void nineBlock() {
-  // ANISH do it here
+  
+
+
+  chassis.odom_xyt_set(-19.5_in, 7.5_in, 0_deg);
+    chassis.odom_x_flip();
+  chassis.odom_theta_flip();
+
+  intake.move(-127);
+            topintake.move(127);
+
+
+
+   chassis.pid_odom_set({{{19.5_in, 20_in}, fwd, normal},
+                        { {23_in, 40_in}, fwd, 60}},
+                        true);
+    chassis.pid_wait();
+   matchload.set(true);
+
+
+     chassis.pid_odom_set({{{25_in, 45_in}, fwd, normal},
+                        },
+                        true);
+    chassis.pid_wait();
+
+     pros::delay(200);
+   
+
+
+
+     matchload.set(false);      
+chassis.pid_odom_set({{{44_in, 66_in,70_deg}, fwd, normal},
+                        { {47_in, 68_in,80_deg}, fwd, 60}},
+                        true);
+    chassis.pid_wait(); 
+chassis.pid_odom_set({{{25_in, 45_in}, rev, normal},
+                        },
+                        true);
+    chassis.pid_wait();
+
+
+chassis.pid_turn_set(135_deg,90);
+ chassis.pid_wait();   
+
+      chassis.pid_odom_set({{{49_in, 24_in}, fwd, normal},
+                        },
+                        true);
+       chassis.pid_wait();
+           intake.move(0);
+            topintake.move(0);
+
+chassis.pid_turn_set(180_deg,90);
+ chassis.pid_wait();
+
+ matchload.set(true);
+  chassis.pid_wait();
+
+  pros::delay(200);
+
+    intake.move(-127);
+    topintake.move(127);
+       
+
+ 
+  chassis.pid_drive_set(9_in, 120, true);
+  chassis.pid_wait();
+
+
+
+
+
+   chassis.pid_drive_set(-30_in, 110, true);
+  chassis.pid_wait();
+
+       intake.move(-127);
+            topintake.move(127);
+              med.set(true);
+             small.set(false);
+
+             pros::delay(3000);
+
+}
+
+void fullSkills() {
+
+    
+  intake.move(-127);
+    topintake.move(127);
+    chassis.pid_drive_set(10_in, 40, true);
+  chassis.pid_wait();
+
+  pros::delay(200);
+
+  chassis.pid_drive_set(-3_in, 40, true);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(10_in, 60, true);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(-5_in, 60, true);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(7_in, 60, true);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(-24_in, 60, true);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(15_in, 60, true);
+  chassis.pid_wait();
+
+double parkAlign = (rightDS.get() / 24.0) + 5 - 60;
+
+  chassis.odom_xyt_set(parkAlign, 28, 0);
+
+        chassis.pid_odom_set({{{-13_in, 56_in,150_deg}, rev, normal},
+                        },
+                        true);
+
+    chassis.pid_swing_set(ez::LEFT_SWING, -135_deg, SWING_SPEED, 0);
+  chassis.pid_wait();
+
+ chassis.pid_drive_set(15_in, 60, true);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(-15_in, 60, true);
+  chassis.pid_wait();
+
+  
+             intake.move(-100);
+            topintake.move(100);
+
+                   med.set(false);
+             small.set(true);
+
+            pros::delay(1000);
+
+             intake.move(-50);
+            topintake.move(50);
+
+            pros::delay(1000);
+
+            
+  chassis.pid_drive_set(3_in, 60, true);
+  chassis.pid_wait();
+
+            
+                   med.set(false);
+             small.set(false);
+
+
+
 }
