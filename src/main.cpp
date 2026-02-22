@@ -8,8 +8,8 @@
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {11, -12, -13},     // Left Chassis Ports (negative port will reverse it!)
-    {-14, 15, 16},  // Right Chassis Ports (negative port will reverse it!)
+    {-13, 11, -18},     // Left Chassis Ports (negative port will reverse it!)
+    {12, -14, 15},  // Right Chassis Ports (negative port will reverse it!)
 
     9,      // IMU Port
     2.75,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
@@ -21,7 +21,7 @@ ez::Drive chassis(
 // - `2.75` is the wheel diameter
 // - `4.0` is the distance from the center of the wheel to the center of the robot
 // ez::tracking_wheel horiz_tracker(8, 2.75, 4.0);  // This tracking wheel is perpendicular to the drive wheels
-ez::tracking_wheel vert_tracker(17, 2, 4.0);   // This tracking wheel is parallel to the drive wheels
+ez::tracking_wheel vert_tracker(17, 2, -0.53);   // This tracking wheel is parallel to the drive wheels
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -69,7 +69,7 @@ void initialize() {
    
      
       
-     
+     /*
       //{"Turn\n\nTurn 3 times.", turn_example},
       {"Drive and Turn\n\nDrive forward, turn, come back", drive_and_turn},
       {"Drive and Turn\n\nSlow down during drive", wait_until_change_speed},
@@ -82,7 +82,7 @@ void initialize() {
       {"Pure Pursuit Wait Until\n\nGo to (24, 24) but start running an intake once the robot passes (12, 24)", odom_pure_pursuit_wait_until_example},
       {"Boomerang\n\nGo to (0, 24, 45) then come back to (0, 0, 0)", odom_boomerang_example},
       {"Boomerang Pure Pursuit\n\nGo to (0, 24, 45) on the way to (24, 24) then come back to (0, 0, 0)", odom_boomerang_injected_pure_pursuit_example},
- 
+ */
   });
 
   // Initialize chassis and auton selector
@@ -305,21 +305,16 @@ void scoreX() {
 }
 
 void effScore() {
-   chassis.odom_xyt_set(0_in, 0_in, 180_deg);
-   descore.set(true);
-
-     chassis.pid_drive_set(15_in, 120, true);
-  chassis.pid_wait();
-
-        chassis.pid_odom_set({{10_in, 0_in,0_deg}, fwd, 110});
-  chassis.pid_wait();
-
+  chassis.odom_xyt_set(0_in, 0_in, 180_deg);
+  descore.set(true);
+  // going backwards a bit so we dont come into contact with the long goal
+  chassis.pid_drive_set(15_in, 120, true); chassis.pid_wait();
+  // point that aligns to the long goal
+  chassis.pid_odom_set({{10_in, 0_in,0_deg}, fwd, 110}); chassis.pid_wait();
   descore.set(false);
-
-        chassis.pid_drive_set(15_in, 120, true);
-  chassis.pid_wait();
-
-   descore.set(true);
+  // push the blocks in. 
+  chassis.pid_drive_set(15_in, 120, true); chassis.pid_wait();
+  descore.set(true);
 }
 
 void deScore() {
@@ -362,11 +357,20 @@ void opcontrol() {
   // This is preference to what you like to drive on
   chassis.drive_brake_set(MOTOR_BRAKE_COAST);
 
-  chassis.odom_xyt_set(0_in, 0_in, 180_deg);
+ 
 
   while (true) {
     // Gives you some extras to make EZ-Template ezier
     ez_template_extras();
+
+    //chassis.pid_tuner_toggle();
+
+     if (master.get_digital(DIGITAL_B)) {
+          drive_example();
+        }
+
+
+    
 
     //chassis.opcontrol_tank();  // Tank control
     chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
@@ -377,11 +381,11 @@ void opcontrol() {
     // . . .
     // Put more user control code here!
     // . . .
-
+    
     if (master.get_digital_new_press(DIGITAL_Y)) {
       matchload.set(!matchload.get());
     } 
-
+/*
       if (master.get_digital_new_press(DIGITAL_DOWN)) {
       descore.set(!descore.get());
     } 
@@ -392,12 +396,12 @@ void opcontrol() {
 
           if (master.get_digital(DIGITAL_LEFT)) {
            deScore();
-        }
-
+        }*/
+/*
             if (master.get_digital(DIGITAL_RIGHT)) {
            backScore();
         }
-
+*/
            if (master.get_digital(DIGITAL_X)) {
            scoreX();
         }
